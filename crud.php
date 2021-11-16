@@ -24,21 +24,19 @@
     <?php
 
       // Create connection
-      $conn = new mysqli($servername, $username, $password, $dbname);
-      // Check connection
-      if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-      }
+      $pdo = new PDO('mysql:host='.$servername.';dbname='.$dbname, $username, $password);
 
       $sql = "SELECT column1, column2, column3, column4, column5 FROM table1";
-      $result = $conn->query($sql);
+      
+      $stmt = $pdo->prepare($sql);
+      $stmt->execute();
       
 
-      if ($result->num_rows > 0) {
+      if ($stmt->rowCount() > 0) {
         $rowFormat = "</td>\n\t<td>";
         echo "<table border='1'><tr><th>ID</th><th>Name</th><th>Fecha</th><th>NumeroDouble</th><th>NumeroFloat</th><th>Eliminar</th><th>Modificar</th></tr>";
         // output data of each row
-        while($row = $result->fetch_assoc()) {
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           echo "\n<tr>\n\t<td>".$row["column1"].$rowFormat.$row["column2"].$rowFormat.$row["column3"].
                 $rowFormat.$row["column4"].$rowFormat.$row["column5"]."</td>\n\t";
           
